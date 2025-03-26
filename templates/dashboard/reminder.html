@@ -13,8 +13,19 @@
     </header>
 
     <!-- Main content -->
-    <main class="py-5 container mx-auto px-2">
-        <h1 class="text-2xl">Reminder</h1>
+    <main class="py-5 container mx-auto px-2 flex flex-col space-y-3 items-start">
+        <div class="text-xl">
+            I have target of connecting with 
+            <input type="number" step="1" class="input w-15"> new clients in 
+            <input type="number" step="1" class="input w-15">
+             days.
+        </div>
+        <button class="btn btn-success">Save</button>
+
+        <div class="text-xl my-5">
+            <b>12</b> pending clients. 
+            <button class="btn btn-sm">Reset counter</button>
+        </div>
     </main>
 
 {% endblock content %}

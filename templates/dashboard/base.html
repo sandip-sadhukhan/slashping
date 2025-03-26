@@ -17,8 +17,7 @@
                     </div>
                     <ul tabindex="0"
                         class="menu menu-sm dropdown-content bg-base-100 text-base-content rounded-box z-1 mt-3 w-52 p-2 shadow">
-
-                        <li><a href="{% url 'customers' %}" class="{% if True  %}menu-active{% endif %}">Customers</a></li>
+                        <li><a href="{% url 'customers' %}" class="{% if '/customers/' in request.path  %}menu-active{% endif %}">Customers</a></li>
                         <li><a href="{% url 'reminder' %}" class="{% if request.path == '/reminder/'  %}menu-active{% endif %}">Reminder</a></li>
                     </ul>
                 </div>
