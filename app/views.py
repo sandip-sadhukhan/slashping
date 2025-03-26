@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
+from django.contrib import messages
+
 from app.constants import CustomerTabs
 from app import forms
 
@@ -40,6 +42,8 @@ def reminder(request):
             request.user.new_client_target = form.cleaned_data.get("new_client_target")
             request.user.new_client_in_days = form.cleaned_data.get("new_client_in_days")
             request.user.save()
+            messages.add_message(request, messages.SUCCESS, "Settings saved successfully")
+
             return redirect("reminder")
         else:
             context["form"] = form

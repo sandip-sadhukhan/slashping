@@ -3,6 +3,15 @@
 {% block content %}
     {{block.super}}
 
+    {% for message in messages %}
+    <div class="toast">
+        <div class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-error{% endif %}">
+            <span>{{message}}</span>
+            <i data-toast="close" class="cursor-pointer bi-x-lg font-bold"></i>
+        </div>
+    </div>
+    {% endfor %}
+
     <!-- Header -->
     <header class="bg-base-100 py-5 shadow">
         <div class="container mx-auto px-2">
