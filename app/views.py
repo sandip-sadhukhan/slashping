@@ -26,3 +26,7 @@ def customers(request):
     }
 
     return render(request, 'dashboard/customers.html', context)
+
+@login_required
+def reminder(request):
+    return render(request, 'dashboard/reminder.html')
