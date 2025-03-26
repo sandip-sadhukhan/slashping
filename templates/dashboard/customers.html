@@ -79,9 +79,9 @@
         <!-- Tabs -->
         <div class="flex flex-col justify-between items-end md:items-center md:flex-row gap-2">
             <div role="tablist" class="tabs tabs-box bg-white/30">
-                <a role="tab" class="tab tab-active">Pending Today (31)</a>
-                <a role="tab" class="tab">Pending Tomorrow (11)</a>
-                <a role="tab" class="tab">All Clients (100)</a>
+                <a href="{% url 'customers' %}?tab={{CustomerTabs.PENDING_TODAY.value}}" role="tab" class="tab{% if tab.value == CustomerTabs.PENDING_TODAY.value %} tab-active{% endif %}">Pending Today (31)</a>
+                <a href="{% url 'customers' %}?tab={{CustomerTabs.PENDING_TOMORROW.value}}" role="tab" class="tab{% if tab.value == CustomerTabs.PENDING_TOMORROW.value %} tab-active{% endif %}">Pending Tomorrow (11)</a>
+                <a href="{% url 'customers' %}?tab={{CustomerTabs.ALL_CLIENTS.value}}" role="tab" class="tab{% if tab.value == CustomerTabs.ALL_CLIENTS.value %} tab-active{% endif %}">All Clients (100)</a>
             </div>
 
             <button class="btn btn-ghost" onclick="reminder_settings_modal.showModal()">
