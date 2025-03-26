@@ -1,8 +1,196 @@
 {% extends 'base.html' %}
 {% block title %}SlashPing - Dashboard{% endblock title %}
+{% block bodyOpeningTag %}
 
-{% block content %}
-<div class="d-flex gap-10 p-5 flex-column justify-start align-items-start">
-    <h1>Customers</h1>
-</div>
-{% endblock %}
+<body class="bg-base-200/80 min-h-screen">{% endblock bodyOpeningTag %}
+
+    {% block content %}
+    <!-- Navbar -->
+    <div class="bg-primary text-primary-content shadow-sm">
+        <div class="navbar mx-auto container">
+            <div class="navbar-start">
+                <div class="dropdown">
+                    <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h8m-8 6h16" />
+                        </svg>
+                    </div>
+                    <ul tabindex="0"
+                        class="menu menu-sm dropdown-content bg-base-100 text-base-content rounded-box z-1 mt-3 w-52 p-2 shadow">
+                        <li><a class="menu-active">Customers</a></li>
+                        <li><a>Reminder</a></li>
+                    </ul>
+                </div>
+                <a href="{% url 'home' %}" class="btn btn-primary text-xl">SlashPing</a>
+            </div>
+            <div class="navbar-center hidden lg:flex">
+                <ul class="menu menu-horizontal px-1 space-x-1.5">
+                    <li><a class="menu-active">Customers</a></li>
+                    <li><a>Reminder</a></li>
+                </ul>
+            </div>
+            <div class="navbar-end">
+                <div class="dropdown dropdown-end">
+                    <div tabindex="0" role="button"
+                        class="btn btn-link text-base-300 cursor-pointer flex items-center -space-x-1">
+                        <div class="w-10 rounded-full">
+                            <img alt="Profile Pic"
+                                src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                                class="btn-circle" />
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="lucide lucide-chevron-down-icon lucide-chevron-down">
+                            <path d="m6 9 6 6 6-6" />
+                        </svg>
+                    </div>
+                    <ul tabindex="0"
+                        class="menu menu-sm dropdown-content bg-base-100 text-base-content rounded-box z-1 mt-3 w-36 p-2 shadow">
+                        <li><a>Your Profile</a></li>
+                        <li><a>Sign out</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="bg-base-100 py-5 shadow">
+        <div class="container mx-auto px-2">
+            <div class="flex justify-between items-center">
+                <h1 class="text-3xl font-bold">Customers</h1>
+                <button class="btn btn-primary" onclick="add_client_modal.showModal()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="lucide lucide-plus-icon lucide-plus">
+                        <path d="M5 12h14" />
+                        <path d="M12 5v14" />
+                    </svg>
+                    Add Client
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main content -->
+    <main class="py-5 container mx-auto px-2">
+        <!-- Tabs -->
+        <div class="flex flex-col justify-between items-end md:items-center md:flex-row gap-2">
+            <div role="tablist" class="tabs tabs-box bg-white/30">
+                <a role="tab" class="tab tab-active">Pending Today (31)</a>
+                <a role="tab" class="tab">Pending Tomorrow (11)</a>
+                <a role="tab" class="tab">All Clients (100)</a>
+            </div>
+
+            <button class="btn btn-ghost" onclick="reminder_settings_modal.showModal()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="lucide lucide-settings-icon lucide-settings">
+                    <path
+                        d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
+                    <circle cx="12" cy="12" r="3" />
+                </svg>
+                Settings
+            </button>
+        </div>
+
+        <!-- Tab Content -->
+        <div class="overflow-x-auto border border-base-content/5 bg-base-100/80 rounded-md my-5">
+            <table class="table">
+                <!-- head -->
+                <thead>
+                    <tr class="bg-secondary text-secondary-content">
+                        <th>#</th>
+                        <th>Client name</th>
+                        <th>Pinged today?</th>
+                        <th>Note</th>
+                        <th>Reminder frequency</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="hover:bg-base-200/50">
+                        <th>1</th>
+                        <td><a href="" class="link flex">Sandip Sadhukhan <i class="bi-box-arrow-up-right ml-1"></i>
+                        <td class="bg-success/5">
+                            <button class="btn btn-sm btn-accent">Ping now</button>
+                            <p class="text-sm text-base-content/50">(last pinged at 24Nov)</p>
+                        </td>
+                        <td>She has a agency called Axonos etc.</td>
+                        <td>Every 7 days</td>
+                        <td><button class="btn btn-ghost btn-sm"><i class="bi-three-dots text-xl"></i></button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- Modals -->
+    <dialog id="reminder_settings_modal" class="modal">
+        <div class="modal-box">
+            <form method="dialog">
+                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+            </form>
+            <h3 class="text-lg font-bold">When do you want to receive the reminder email?</h3>
+            <fieldset class="fieldset my-5 max-w-xl">
+                <legend class="fieldset-legend text-md">Time in IST:</legend>
+                <div class="flex space-x-2 items-center justify-center">
+                    <select class="select">
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                    </select>
+                    <span class="font-medium text-xl">:</span>
+                    <select class="select">
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                    </select>
+                </div>
+            </fieldset>
+
+            <div class="flex justify-end space-x-2">
+                <button class="btn" onclick="reminder_settings_modal.close()">Cancel</button>
+                <button class="btn btn-primary">Save</button>
+            </div>
+        </div>
+    </dialog>
+
+    <dialog id="add_client_modal" class="modal">
+        <div class="modal-box">
+            <form method="dialog">
+                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+            </form>
+            <h3 class="text-lg font-bold">Add Client</h3>
+
+            <fieldset class="fieldset">
+                <legend class="fieldset-legend">Name</legend>
+                <input type="text" class="input w-full" placeholder="Enter client name..." />
+            </fieldset>
+            <fieldset class="fieldset">
+                <legend class="fieldset-legend">Contact link</legend>
+                <input type="url" class="input w-full" placeholder="Enter url to connect with client" />
+            </fieldset>
+            <fieldset class="fieldset">
+                <legend class="fieldset-legend">Note(Optional)</legend>
+                <textarea class="textarea w-full"></textarea>
+            </fieldset>
+            <fieldset class="fieldset">
+                <legend class="fieldset-legend">Remind me after how many days?</legend>
+                <select class="select w-full">
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                </select>
+            </fieldset>
+
+            <div class="flex justify-end space-x-2 mt-3">
+                <button class="btn" onclick="add_client_modal.close()">Cancel</button>
+                <button class="btn btn-primary">Save</button>
+            </div>
+        </div>
+    </dialog>
+
+    {% endblock content %}
