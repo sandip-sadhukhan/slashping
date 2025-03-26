@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from app.constants import CustomerTabs
-from app.forms import CustomerMailTimeForm
+from app import forms
 
 def home(request):
     return render(request, 'home.html')
@@ -31,7 +31,20 @@ def customers(request):
 
 @login_required
 def reminder(request):
-    return render(request, 'dashboard/reminder.html')
+    context = {}
+
+    if request.method == "POST":
+        form = forms.ReminderSettings(data=request.POST)
+
+        if form.is_valid():
+            request.user.new_client_target = form.cleaned_data.get("new_client_target")
+            request.user.new_client_in_days = form.cleaned_data.get("new_client_in_days")
+            request.user.save()
+            return redirect("reminder")
+        else:
+            context["form"] = form
+
+    return render(request, 'dashboard/reminder.html', context)
 
 # @login_required
 # @require_POST

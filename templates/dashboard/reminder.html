@@ -13,19 +13,34 @@
     </header>
 
     <!-- Main content -->
-    <main class="py-5 container mx-auto px-2 flex flex-col space-y-3 items-start">
-        <div class="text-xl">
-            I have target of connecting with 
-            <input type="number" step="1" class="input w-15"> new clients in 
-            <input type="number" step="1" class="input w-15">
-             days.
-        </div>
-        <button class="btn btn-success">Save</button>
+    <main class="py-5 container mx-auto px-2">
+        <form class="flex flex-col space-y-3 items-start" action="{% url 'reminder' %}" method="post">
+            {% csrf_token %}
+            <div class="text-xl">
+                I have target of connecting with 
+                <input name="new_client_target" type="number" step="1" class="input w-15" value="{{request.user.new_client_target}}" required> new clients in 
+                <input name="new_client_in_days" type="number" step="1" class="input w-15" value="{{request.user.new_client_in_days}}" required>
+                days.
+            </div>
+            {% if form.errors %}
+                <div class="alert alert-error">
+                    <ul>
+                        {% for field in form %}
+                            {% for error in field.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
 
-        <div class="text-xl my-5">
-            <b>12</b> pending clients. 
-            <button class="btn btn-sm">Reset counter</button>
-        </div>
+            <button class="btn btn-success" type="submit">Save</button>
+
+            <div class="text-xl my-5">
+                <b>12</b> pending clients. 
+                <button class="btn btn-sm">Reset counter</button>
+            </div>
+        </form>
     </main>
 
 {% endblock content %}
