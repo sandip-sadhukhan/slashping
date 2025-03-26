@@ -7,3 +7,5 @@ node_modules/
 
 # Don't add tailwind output in git as it is generated though input.css
 static/css/tailwind/output.css
+
+media/

@@ -1,6 +1,8 @@
+import datetime
 from django.db import models
 from django.contrib.auth.models import UserManager as BaseUserManager, AbstractUser
 from django.utils.translation import gettext_lazy as _
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 class UserManager(BaseUserManager):
     use_in_migrations = True
@@ -32,6 +34,9 @@ class UserManager(BaseUserManager):
         return self._create_user(email, password, **extra_fields)
     
 
+def user_directory_path(instance, filename): 
+	return 'profile_images/user_{0}/{1}'.format(instance.id, filename) 
+
 class User(AbstractUser):
     username = None
     first_name = None
@@ -39,6 +44,10 @@ class User(AbstractUser):
 
     email = models.EmailField(_("email address"), unique=True)
     name = models.CharField(_("name"), max_length=150)
+    reminder_email_time = models.TimeField(default=datetime.time(hour=8, minute=0))
+    new_client_target = models.PositiveIntegerField(default=0, validators = [MinValueValidator(0)])
+    new_client_in_days = models.PositiveIntegerField(default=7, validators = [MinValueValidator(1), MaxValueValidator(30)])
+    profile_image = models.ImageField(upload_to=user_directory_path, null=True, blank=True)
 
     EMAIL_FIELD = "email"
     USERNAME_FIELD = "email"

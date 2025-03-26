@@ -34,7 +34,12 @@ cp .deafult.env .env
 
 Then edit the `.env` file if you want.
 
-6. Run the local server
+6. Run all migrations
+```bash
+python manage.py migrate
+```
+
+7. Run the local server
 
 ```bash
 python manage.py runserver

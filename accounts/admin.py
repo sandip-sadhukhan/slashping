@@ -19,6 +19,7 @@ class UserAdmin(BaseUserAdmin):
                 ),
             },
         ),
+        (_("Profile Details"), {"fields": ("reminder_email_time", "new_client_target", "new_client_in_days", "profile_image")}),
         (_("Important dates"), {"fields": ("last_login", "date_joined")}),
     )
     add_fieldsets = (

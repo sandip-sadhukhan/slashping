@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 from app.constants import CustomerTabs
+from app.forms import CustomerMailTimeForm
 
 def home(request):
     return render(request, 'home.html')
@@ -30,3 +32,16 @@ def customers(request):
 @login_required
 def reminder(request):
     return render(request, 'dashboard/reminder.html')
+
+# @login_required
+# @require_POST
+# def save_customer_mail_time(request):
+#     form = CustomerMailTimeForm(request.POST)
+
+#     if not form.is_valid():
+#         return redirect(request.path)
+
+#     hour = form.cleaned_data.get("hour")
+#     minute = form.cleaned_data.get("minute")
+#     # import ipdb
+    # ipdb.set_trace()
