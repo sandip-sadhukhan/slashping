@@ -81,22 +81,25 @@
                 <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
             </form>
             <h3 class="text-lg font-bold">When do you want to receive the reminder email?</h3>
-            <fieldset class="fieldset my-5 max-w-xl">
-                <legend class="fieldset-legend text-md">Time in IST:</legend>
-                <div class="flex space-x-2 items-center justify-start">
-                    <input type="number" class="input w-20" value="{{request.user.reminder_email_time|date:'H'}}" min="0" max="23" required>
-                    <span class="font-medium text-xl">:</span>
-                    <select class="select w-20">
-                        <option {% if request.user.reminder_email_time|date:'i' == '00' %}selected{% endif %}>0</option>
-                        <option {% if request.user.reminder_email_time|date:'i' == '30' %}selected{% endif %}>30</option>
-                    </select>
-                </div>
-            </fieldset>
+            <form id="reminder_settings_form" hx-post="{% url 'save_customer_mail_time' %}" method="post" hx-target="body" hx-swap="beforeend">
+                {% csrf_token %}
+                <fieldset class="fieldset my-5 max-w-xl">
+                    <legend class="fieldset-legend text-md">Time in IST:</legend>
+                    <div class="flex space-x-2 items-center justify-start">
+                        <input name="hour" type="number" class="input w-20" value="{{request.user.reminder_email_time|date:'H'}}" min="0" max="23" required>
+                        <span class="font-medium text-xl">:</span>
+                        <select name="minute" class="select w-20">
+                            <option {% if request.user.reminder_email_time|date:'i' == '00' %}selected{% endif %}>0</option>
+                            <option {% if request.user.reminder_email_time|date:'i' == '30' %}selected{% endif %}>30</option>
+                        </select>
+                    </div>
+                </fieldset>
 
-            <div class="flex justify-end space-x-2">
-                <button class="btn" onclick="reminder_settings_modal.close()">Cancel</button>
-                <button class="btn btn-primary">Save</button>
-            </div>
+                <div class="flex justify-end space-x-2">
+                    <button type="button" class="btn" onclick="reminder_settings_modal.close()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
         </div>
     </dialog>
 
@@ -137,3 +140,14 @@
     </dialog>
 
 {% endblock content %}
+
+{% block js %}
+<script>
+    // Close reminder settings modal after successfully saved
+    document.getElementById("reminder_settings_form")
+        .addEventListener("htmx:beforeRequest", function(event) {
+            // console.log(event)
+            reminder_settings_modal.close();
+        });
+</script>
+{% endblock %}

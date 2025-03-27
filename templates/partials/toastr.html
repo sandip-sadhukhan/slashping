@@ -1,0 +1,6 @@
+<div class="toast">
+    <div class="alert {% if type == 'success' %}alert-success{% elif type == 'error' %}alert-error{% endif %}">
+        <span>{{message}}</span>
+        <i data-toast="close" class="cursor-pointer bi-x-lg font-bold"></i>
+    </div>
+</div>

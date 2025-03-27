@@ -1,3 +1,4 @@
+import datetime
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
@@ -50,15 +51,20 @@ def reminder(request):
 
     return render(request, 'dashboard/reminder.html', context)
 
-# @login_required
-# @require_POST
-# def save_customer_mail_time(request):
-#     form = CustomerMailTimeForm(request.POST)
+@login_required
+@require_POST
+def save_customer_mail_time(request):
+    form = forms.CustomerMailTimeForm(request.POST)
 
-#     if not form.is_valid():
-#         return redirect(request.path)
+    if not form.is_valid():
+        import ipdb
+        ipdb.set_trace()
 
-#     hour = form.cleaned_data.get("hour")
-#     minute = form.cleaned_data.get("minute")
-#     # import ipdb
-    # ipdb.set_trace()
+    hour = form.cleaned_data.get("hour")
+    minute = form.cleaned_data.get("minute")
+    user = request.user
+    user.reminder_email_time = datetime.time(hour=hour, minute=minute)
+    user.save()
+
+    return render(request, "partials/toastr.html",
+                  {"message": "Time saved successfully", "type": "success"})

@@ -19,7 +19,9 @@
     {% block content %}{% endblock content %}
 
     <!-- Scripts -->
+    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
     <script src="{% static 'js/tailwind/helpers.js' %}"></script>
+    {% block js %}{% endblock %}
 </body>
 
 </html>
