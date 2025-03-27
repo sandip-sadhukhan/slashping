@@ -83,17 +83,12 @@
             <h3 class="text-lg font-bold">When do you want to receive the reminder email?</h3>
             <fieldset class="fieldset my-5 max-w-xl">
                 <legend class="fieldset-legend text-md">Time in IST:</legend>
-                <div class="flex space-x-2 items-center justify-center">
-                    <select class="select">
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                    </select>
+                <div class="flex space-x-2 items-center justify-start">
+                    <input type="number" class="input w-20" value="{{request.user.reminder_email_time|date:'H'}}" min="0" max="23" required>
                     <span class="font-medium text-xl">:</span>
-                    <select class="select">
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
+                    <select class="select w-20">
+                        <option {% if request.user.reminder_email_time|date:'i' == '00' %}selected{% endif %}>0</option>
+                        <option {% if request.user.reminder_email_time|date:'i' == '30' %}selected{% endif %}>30</option>
                     </select>
                 </div>
             </fieldset>
