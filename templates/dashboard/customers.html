@@ -1,4 +1,5 @@
 {% extends 'dashboard/base.html' %}
+{% load partials %}
 
 {% block content %}
     {{block.super}}
@@ -81,25 +82,32 @@
                 <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
             </form>
             <h3 class="text-lg font-bold">When do you want to receive the reminder email?</h3>
-            <form id="reminder_settings_form" hx-post="{% url 'save_customer_mail_time' %}" method="post" hx-target="body" hx-swap="beforeend">
-                {% csrf_token %}
-                <fieldset class="fieldset my-5 max-w-xl">
-                    <legend class="fieldset-legend text-md">Time in IST:</legend>
-                    <div class="flex space-x-2 items-center justify-start">
-                        <input name="hour" type="number" class="input w-20" value="{{request.user.reminder_email_time|date:'H'}}" min="0" max="23" required>
-                        <span class="font-medium text-xl">:</span>
-                        <select name="minute" class="select w-20">
-                            <option {% if request.user.reminder_email_time|date:'i' == '00' %}selected{% endif %}>0</option>
-                            <option {% if request.user.reminder_email_time|date:'i' == '30' %}selected{% endif %}>30</option>
-                        </select>
-                    </div>
-                </fieldset>
+            {% partialdef reminder-settings-form inline %}
+                <form id="reminder_settings_form" hx-post="{% url 'save_customer_mail_time' %}" method="post" hx-target="body" hx-swap="beforeend">
+                    {% csrf_token %}
+                    <fieldset class="fieldset my-5 max-w-xl">
+                        <legend class="fieldset-legend text-md">Time in IST:</legend>
+                        <div class="flex space-x-2 items-center justify-start">
+                            <input name="hour" type="number" class="input w-20" value="{{reminder_email_time_form.hour.value}}" min="0" max="23" required>
+                            <span class="font-medium text-xl">:</span>
+                            <select name="minute" class="select w-20">
+                                <option {% if reminder_email_time_form.minute.value == 0 %}selected{% endif %}>0</option>
+                                <option {% if reminder_email_time_form.minute.value == 30 %}selected{% endif %}>30</option>
+                            </select>
+                        </div>
+                        {% if reminder_email_time_form.errors %}
+                            {% for key, errors in reminder_email_time_form.errors.items %}
+                                <p class="fieldset-label text-error">{{errors|join:","}}</p>
+                            {% endfor %}
+                        {% endif %}
+                    </fieldset>
 
-                <div class="flex justify-end space-x-2">
-                    <button type="button" class="btn" onclick="reminder_settings_modal.close()">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Save</button>
-                </div>
-            </form>
+                    <div class="flex justify-end space-x-2">
+                        <button type="button" class="btn" onclick="reminder_settings_modal.close()">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </form>
+            {% endpartialdef reminder-settings-form %}
         </div>
     </dialog>
 
@@ -143,11 +151,20 @@
 
 {% block js %}
 <script>
-    // Close reminder settings modal after successfully saved
-    document.getElementById("reminder_settings_form")
-        .addEventListener("htmx:beforeRequest", function(event) {
-            // console.log(event)
-            reminder_settings_modal.close();
-        });
+    document.body.addEventListener("htmx:load", function(event) {
+        const reminderForm = event.target.matches("#reminder_settings_form") ?
+            event.target : event.target.querySelector("#reminder_settings_form");
+
+        // Close reminder settings modal after successfully saved
+        reminderForm
+            ?.addEventListener("htmx:afterRequest", function(event) {
+                const formError = event.detail.xhr.getResponseHeader('DATA-Form-Error');
+
+                if (!formError) {
+                    reminder_settings_modal.close();
+                    reminderForm.querySelectorAll('.text-error').forEach(el => el.remove());
+                }
+            });
+    })
 </script>
 {% endblock %}

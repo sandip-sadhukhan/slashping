@@ -25,9 +25,14 @@ def customers(request):
     except ValueError:
         return redirect("dashboard")
     
+    reminder_email_time_form = forms.CustomerMailTimeForm(
+        data={"hour": request.user.reminder_email_time.hour,
+              "minute": request.user.reminder_email_time.minute})
+    
     context = {
         'tab': tab,
-        'CustomerTabs': CustomerTabs
+        'CustomerTabs': CustomerTabs,
+        'reminder_email_time_form': reminder_email_time_form
     }
 
     return render(request, 'dashboard/customers.html', context)
@@ -57,8 +62,12 @@ def save_customer_mail_time(request):
     form = forms.CustomerMailTimeForm(request.POST)
 
     if not form.is_valid():
-        import ipdb
-        ipdb.set_trace()
+        response = render(request, 'dashboard/customers.html#reminder-settings-form', {"reminder_email_time_form": form})
+        response['HX-Retarget'] = '#reminder_settings_form'
+        response['HX-Reswap'] = 'outerHTML'
+        response['DATA-Form-Error'] = 'true'
+
+        return response
 
     hour = form.cleaned_data.get("hour")
     minute = form.cleaned_data.get("minute")
