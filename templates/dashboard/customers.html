@@ -50,7 +50,7 @@
                 <!-- head -->
                 <thead>
                     <tr class="bg-secondary text-secondary-content">
-                        <th>#</th>
+                        <th></th>
                         <th>Client name</th>
                         <th>Pinged today?</th>
                         <th>Note</th>
@@ -59,17 +59,21 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="hover:bg-base-200/50">
-                        <th>1</th>
-                        <td><a href="" class="link flex">Sandip Sadhukhan <i class="bi-box-arrow-up-right ml-1"></i>
-                        <td class="bg-success/5">
-                            <button class="btn btn-sm btn-accent">Ping now</button>
-                            <p class="text-sm text-base-content/50">(last pinged at 24Nov)</p>
-                        </td>
-                        <td>She has a agency called Axonos etc.</td>
-                        <td>Every 7 days</td>
-                        <td><button class="btn btn-ghost btn-sm" onclick="edit_client_modal.showModal()"><i class="bi-three-dots text-xl"></i></button></td>
-                    </tr>
+                    {% for client in clients %}
+                        <tr class="hover:bg-base-200/50">
+                            <th>{{forloop.counter}}</th>
+                            <td><a href="{{client.contact_link}}" target="_blank" class="link flex">{{client.name}} <i class="bi-box-arrow-up-right ml-1"></i>
+                            <td class="{% if today|date:'Y-m-d' == client.last_pinged_at|date:'Y-m-d' %}bg-success/5{% endif %}">
+                                <button hx-post="{% url 'ping_client' client.id %}" class="btn btn-sm btn-accent">Ping now</button>
+                                {% if client.last_pinged_at %}
+                                    <p class="text-sm text-base-content/50">(last pinged at {{client.last_pinged_at|date:"dM"}})</p>
+                                {% endif %}
+                            </td>
+                            <td class="max-w-36">{{client.note}}</td>
+                            <td>Every {{client.remind_me_in_days}} days</td>
+                            <td><button class="btn btn-ghost btn-sm" onclick="edit_client_modal.showModal()"><i class="bi-three-dots text-xl"></i></button></td>
+                        </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>

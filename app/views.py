@@ -1,5 +1,5 @@
 import datetime
-from django.shortcuts import render, redirect, HttpResponse
+from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
@@ -29,11 +29,15 @@ def customers(request):
         data={"hour": request.user.reminder_email_time.hour,
               "minute": request.user.reminder_email_time.minute})
     
+    clients = models.Client.objects.filter(created_by=request.user)
+    
     context = {
         'tab': tab,
         'CustomerTabs': CustomerTabs,
         'reminder_email_time_form': reminder_email_time_form,
-        'create_client_form': forms.ClientForm()
+        'create_client_form': forms.ClientForm(),
+        'clients': clients,
+        'today': datetime.date.today()
     }
 
     return render(request, 'dashboard/customers.html', context)
@@ -106,4 +110,14 @@ def create_client(request):
     else:
         response['HX-Refresh'] = 'true'
 
+    return response
+
+@login_required
+@require_POST
+def ping_client(request, client_id):
+    client = get_object_or_404(models.Client, id=client_id, created_by=request.user)
+    client.ping()
+
+    response = HttpResponse()
+    response['HX-Refresh'] = 'true'
     return response
