@@ -2,7 +2,9 @@ import datetime
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import (
+    require_POST, require_http_methods, require_GET
+)
 from django.contrib import messages
 
 from app.constants import CustomerTabs
@@ -121,3 +123,41 @@ def ping_client(request, client_id):
     response = HttpResponse()
     response['HX-Refresh'] = 'true'
     return response
+
+@login_required
+@require_http_methods(['DELETE'])
+def delete_client(request, client_id):
+    client = get_object_or_404(models.Client, id=client_id, created_by=request.user)
+    client.delete()
+
+    response = HttpResponse()
+    response['HX-Refresh'] = 'true'
+    return response
+
+@login_required
+@require_http_methods(['GET', 'POST'])
+def edit_client(request, client_id):
+    client = get_object_or_404(models.Client, id=client_id, created_by=request.user)
+    form = forms.ClientForm(instance=client)
+
+    if request.method == 'POST':
+        form = forms.ClientForm(data=request.POST)
+
+        if not form.is_valid():
+            return render(request, 'dashboard/customers.html#edit-client-form',
+                {"client": client, 'edit_client_form': form})
+            
+        client.name = form.cleaned_data.get("name")
+        client.contact_link = form.cleaned_data.get("contact_link")
+        client.note = form.cleaned_data.get("note")
+        client.remind_me_in_days = form.cleaned_data.get("remind_me_in_days")
+        client.save()
+
+        messages.add_message(request, messages.SUCCESS, "Client updated successfully")
+
+        response = HttpResponse()
+        response['HX-Refresh'] = 'true'
+        return response
+
+    return render(request, 'dashboard/customers.html#edit-client-form',
+                  {"client": client, 'edit_client_form': form})

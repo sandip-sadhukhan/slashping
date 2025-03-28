@@ -71,7 +71,17 @@
                             </td>
                             <td class="max-w-36">{{client.note}}</td>
                             <td>Every {{client.remind_me_in_days}} days</td>
-                            <td><button class="btn btn-ghost btn-sm" onclick="edit_client_modal.showModal()"><i class="bi-three-dots text-xl"></i></button></td>
+                            <td>
+                                <button
+                                    hx-get="{% url 'edit_client' client.id %}"
+                                    hx-target="#edit_client_modal .modal-box"
+                                    hx-swap="beforeend"
+                                    hx-on::before-request="document.getElementById('edit_client_form')?.remove()"
+                                    hx-on::after-request="edit_client_modal.showModal()"
+                                    class="btn btn-ghost btn-sm">
+                                    <i class="bi-three-dots text-xl"></i>
+                                </button>
+                            </td>
                         </tr>
                     {% endfor %}
                 </tbody>
@@ -171,34 +181,47 @@
             <form method="dialog">
                 <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
             </form>
-            <h3 class="text-lg font-bold">Edit Client #33</h3>
 
-            <fieldset class="fieldset">
-                <legend class="fieldset-legend">Name</legend>
-                <input type="text" class="input w-full" placeholder="Enter client name..." />
-            </fieldset>
-            <fieldset class="fieldset">
-                <legend class="fieldset-legend">Contact link</legend>
-                <input type="url" class="input w-full" placeholder="Enter url to connect with client" />
-            </fieldset>
-            <fieldset class="fieldset">
-                <legend class="fieldset-legend">Note(Optional)</legend>
-                <textarea class="textarea w-full"></textarea>
-            </fieldset>
-            <fieldset class="fieldset">
-                <legend class="fieldset-legend">Remind me after how many days?</legend>
-                <select class="select w-full">
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                </select>
-            </fieldset>
+            {% partialdef edit-client-form %}
+            <form id="edit_client_form" hx-post="{% url 'edit_client' client.id %}" method="post" hx-target="#edit_client_form" hx-swap="outerHTML">
+                <h3 class="text-lg font-bold">Edit Client #{{client.id}}</h3>
 
-            <div class="flex justify-end space-x-2 mt-3">
-                <button class="btn" onclick="edit_client_modal.close()">Cancel</button>
-                <button class="btn btn-error text-primary-content">Delete</button>
-                <button class="btn btn-primary">Save</button>
-            </div>
+                <fieldset class="fieldset">
+                    <legend class="fieldset-legend">Name</legend>
+                    <input name="name" type="text" class="input w-full" placeholder="Enter client name..." value="{{edit_client_form.name.value|default:''}}" />
+                    {% if edit_client_form.errors.name %}
+                        <p class="fieldset-label text-error">{{edit_client_form.errors.name|join:","}}</p>
+                    {% endif %}
+                </fieldset>
+                <fieldset class="fieldset">
+                    <legend class="fieldset-legend">Contact link</legend>
+                    <input name="contact_link" type="url" class="input w-full" placeholder="Enter url to connect with client" value="{{edit_client_form.contact_link.value|default:''}}" />
+                    {% if edit_client_form.errors.contact_link %}
+                        <p class="fieldset-label text-error">{{edit_client_form.errors.contact_link|join:","}}</p>
+                    {% endif %}
+                </fieldset>
+                <fieldset class="fieldset">
+                    <legend class="fieldset-legend">Note(Optional)</legend>
+                    <textarea name="note" class="textarea w-full">{{edit_client_form.note.value|default:''}}</textarea>
+                    {% if edit_client_form.errors.note %}
+                        <p class="fieldset-label text-error">{{edit_client_form.errors.note|join:","}}</p>
+                    {% endif %}
+                </fieldset>
+                <fieldset class="fieldset">
+                    <legend class="fieldset-legend">Remind me after how many days?</legend>
+                    <input type="number" name="remind_me_in_days" class="input" value="{{edit_client_form.remind_me_in_days.value|default:''}}">
+                    {% if edit_client_form.errors.remind_me_in_days %}
+                        <p class="fieldset-label text-error">{{edit_client_form.errors.remind_me_in_days|join:","}}</p>
+                    {% endif %}
+                </fieldset>
+
+                <div class="flex justify-end space-x-2 mt-3">
+                    <button type="button" class="btn" onclick="edit_client_modal.close()">Cancel</button>
+                    <button hx-delete="{% url 'delete_client' client.id %}" type="button" class="btn btn-error text-primary-content">Delete</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+            {% endpartialdef edit-client-form %}
         </div>
     </dialog>
 
