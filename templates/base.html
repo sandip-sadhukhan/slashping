@@ -15,7 +15,7 @@
     {% block head %}{% endblock %}
 </head>
 
-{% block bodyOpeningTag %}<body>{% endblock bodyOpeningTag %}
+{% block bodyOpeningTag %}<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>{% endblock bodyOpeningTag %}
     {% block content %}{% endblock content %}
 
     <!-- Scripts -->

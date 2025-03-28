@@ -1,12 +1,12 @@
 import datetime
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.contrib import messages
 
 from app.constants import CustomerTabs
-from app import forms
+from app import forms, models
 
 def home(request):
     return render(request, 'home.html')
@@ -32,7 +32,8 @@ def customers(request):
     context = {
         'tab': tab,
         'CustomerTabs': CustomerTabs,
-        'reminder_email_time_form': reminder_email_time_form
+        'reminder_email_time_form': reminder_email_time_form,
+        'create_client_form': forms.ClientForm()
     }
 
     return render(request, 'dashboard/customers.html', context)
@@ -77,3 +78,32 @@ def save_customer_mail_time(request):
 
     return render(request, "partials/toastr.html",
                   {"message": "Time saved successfully", "type": "success"})
+
+@login_required
+@require_POST
+def create_client(request):
+    form = forms.ClientForm(data=request.POST)
+
+    if not form.is_valid():
+        response = render(request, 'dashboard/customers.html#new-client-form', {"create_client_form": form})
+        return response
+    
+    models.Client.objects.create(
+        name=form.cleaned_data.get("name"),
+        contact_link=form.cleaned_data.get("contact_link"),
+        note=form.cleaned_data.get("note"),
+        remind_me_in_days=form.cleaned_data.get("remind_me_in_days"),
+        created_by=request.user
+    )
+
+    add_another_client = request.POST.get('add_another_client', False)
+
+    messages.add_message(request, messages.SUCCESS, "Client created successfully")
+    response = HttpResponse()
+
+    if add_another_client:
+        response['HX-Redirect'] = request.headers['Hx-Current-url'] + "&open_new_client_modal=true"
+    else:
+        response['HX-Refresh'] = 'true'
+
+    return response

@@ -9,7 +9,7 @@ class Client(models.Model):
     remind_me_in_days = models.PositiveIntegerField(validators=[MinValueValidator(1), MaxValueValidator(30)])
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='clients', on_delete=models.CASCADE)
 
-    last_pinged_at = models.DateTimeField(null=True)
+    last_pinged_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

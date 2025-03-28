@@ -1,5 +1,6 @@
 from django import forms
 from django.core.validators import MaxValueValidator, MinValueValidator 
+from app import models
 
 class CustomerMailTimeForm(forms.Form):
     hour = forms.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(23)])
@@ -17,3 +18,9 @@ class CustomerMailTimeForm(forms.Form):
 class ReminderSettings(forms.Form):
     new_client_target = forms.IntegerField(validators=[MinValueValidator(0)])
     new_client_in_days = forms.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(30)])
+
+
+class ClientForm(forms.ModelForm):
+    class Meta:
+        model = models.Client
+        fields = ['name', 'contact_link', 'note', 'remind_me_in_days']

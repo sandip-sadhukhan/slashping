@@ -9,7 +9,7 @@
         <div class="container mx-auto px-2">
             <div class="flex justify-between items-center">
                 <h1 class="text-3xl font-bold">Customers</h1>
-                <button class="btn btn-primary" onclick="add_client_modal.showModal()">
+                <button class="btn btn-primary" onclick="create_client_modal.showModal()">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                         class="lucide lucide-plus-icon lucide-plus">
@@ -68,7 +68,7 @@
                         </td>
                         <td>She has a agency called Axonos etc.</td>
                         <td>Every 7 days</td>
-                        <td><button class="btn btn-ghost btn-sm" onclick="add_client_modal.showModal()"><i class="bi-three-dots text-xl"></i></button></td>
+                        <td><button class="btn btn-ghost btn-sm" onclick="edit_client_modal.showModal()"><i class="bi-three-dots text-xl"></i></button></td>
                     </tr>
                 </tbody>
             </table>
@@ -111,12 +111,63 @@
         </div>
     </dialog>
 
-    <dialog id="add_client_modal" class="modal">
+    <!-- Create Client modal -->
+    <dialog id="create_client_modal" class="modal">
         <div class="modal-box">
             <form method="dialog">
                 <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
             </form>
             <h3 class="text-lg font-bold">Add Client</h3>
+
+            {% partialdef new-client-form inline %}
+            <form id="create_client_form" hx-post="{% url 'create_client' %}" method="post" hx-target="#create_client_form" hx-swap="outerHTML">
+                <input id="add_another_client" type="hidden" name="add_another_client" value="false">
+                <fieldset class="fieldset">
+                    <legend class="fieldset-legend">Name</legend>
+                    <input name="name" type="text" class="input w-full" placeholder="Enter client name..." value="{{create_client_form.name.value|default:''}}" />
+                    {% if create_client_form.errors.name %}
+                        <p class="fieldset-label text-error">{{create_client_form.errors.name|join:","}}</p>
+                    {% endif %}
+                </fieldset>
+                <fieldset class="fieldset">
+                    <legend class="fieldset-legend">Contact link</legend>
+                    <input name="contact_link" type="url" class="input w-full" placeholder="Enter url to connect with client" value="{{create_client_form.contact_link.value|default:''}}" />
+                    {% if create_client_form.errors.contact_link %}
+                        <p class="fieldset-label text-error">{{create_client_form.errors.contact_link|join:","}}</p>
+                    {% endif %}
+                </fieldset>
+                <fieldset class="fieldset">
+                    <legend class="fieldset-legend">Note(Optional)</legend>
+                    <textarea name="note" class="textarea w-full">{{create_client_form.note.value|default:''}}</textarea>
+                    {% if create_client_form.errors.note %}
+                        <p class="fieldset-label text-error">{{create_client_form.errors.note|join:","}}</p>
+                    {% endif %}
+                </fieldset>
+                <fieldset class="fieldset">
+                    <legend class="fieldset-legend">Remind me after how many days?</legend>
+                    <input type="number" name="remind_me_in_days" class="input" value="{{create_client_form.remind_me_in_days.value|default:''}}">
+                    {% if create_client_form.errors.remind_me_in_days %}
+                        <p class="fieldset-label text-error">{{create_client_form.errors.remind_me_in_days|join:","}}</p>
+                    {% endif %}
+                </fieldset>
+
+                <div class="flex justify-end space-x-2 mt-3">
+                    <button type="button" class="btn" onclick="create_client_modal.close()">Cancel</button>
+                    <button onclick="addAnotherClient()" type="button" class="btn btn-secondary">Save and add another</button>
+                    <button id="create_client_btn" type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+            {% endpartialdef new-client-form %}
+        </div>
+    </dialog>
+
+    <!-- Edit Client modal -->
+    <dialog id="edit_client_modal" class="modal">
+        <div class="modal-box">
+            <form method="dialog">
+                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+            </form>
+            <h3 class="text-lg font-bold">Edit Client #33</h3>
 
             <fieldset class="fieldset">
                 <legend class="fieldset-legend">Name</legend>
@@ -140,8 +191,8 @@
             </fieldset>
 
             <div class="flex justify-end space-x-2 mt-3">
-                <button class="btn btn-error text-primary-content" onclick="add_client_modal.close()">Delete</button>
-                <button class="btn" onclick="add_client_modal.close()">Cancel</button>
+                <button class="btn" onclick="edit_client_modal.close()">Cancel</button>
+                <button class="btn btn-error text-primary-content">Delete</button>
                 <button class="btn btn-primary">Save</button>
             </div>
         </div>
@@ -151,6 +202,16 @@
 
 {% block js %}
 <script>
+    // On page load if `open_new_client_modal` is true then open create client modal
+    document.addEventListener("DOMContentLoaded", function() {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('open_new_client_modal')) {
+            create_client_modal.showModal();
+            params.delete('open_new_client_modal');
+            window.history.replaceState({}, document.title, window.location.pathname + '?' + params);
+        }
+    });
+
     document.body.addEventListener("htmx:load", function(event) {
         const reminderForm = event.target.matches("#reminder_settings_form") ?
             event.target : event.target.querySelector("#reminder_settings_form");
@@ -166,5 +227,10 @@
                 }
             });
     })
+
+    const addAnotherClient = function() {
+        document.querySelector("#add_another_client").value = "true";
+        document.getElementById("create_client_btn").click();
+    }
 </script>
 {% endblock %}

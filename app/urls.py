@@ -7,4 +7,5 @@ urlpatterns = [
     path('customers/', views.customers, name='customers'),
     path('reminder/', views.reminder, name='reminder'),
     path('save_customer_mail_time/', views.save_customer_mail_time, name='save_customer_mail_time'),
+    path('create_client/', views.create_client, name='create_client'),
 ]
