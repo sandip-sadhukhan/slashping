@@ -161,3 +161,7 @@ def edit_client(request, client_id):
 
     return render(request, 'dashboard/customers.html#edit-client-form',
                   {"client": client, 'edit_client_form': form})
+
+@login_required
+def profile_page(request):
+    return render(request, 'dashboard/profile_page.html')
