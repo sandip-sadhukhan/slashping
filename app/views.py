@@ -45,6 +45,11 @@ def customers(request):
     elif tab == CustomerTabs.PENDING_TOMORROW:
         clients = clients.pending_tomorrows_clients()
     
+    if tab in [CustomerTabs.PENDING_TODAY, CustomerTabs.PENDING_TOMORROW]:
+        clients = clients.order_by('reminder_date')
+    else:
+        clients = clients.order_by('created_at')
+    
     context = {
         'tab': tab,
         'CustomerTabs': CustomerTabs,
