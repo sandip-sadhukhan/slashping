@@ -27,9 +27,9 @@
         <!-- Tabs -->
         <div class="flex flex-col justify-between items-end md:items-center md:flex-row gap-2">
             <div role="tablist" class="tabs tabs-box bg-white/30">
-                <a href="{% url 'customers' %}?tab={{CustomerTabs.PENDING_TODAY.value}}" role="tab" class="tab{% if tab.value == CustomerTabs.PENDING_TODAY.value %} tab-active{% endif %}">Pending Today (31)</a>
-                <a href="{% url 'customers' %}?tab={{CustomerTabs.PENDING_TOMORROW.value}}" role="tab" class="tab{% if tab.value == CustomerTabs.PENDING_TOMORROW.value %} tab-active{% endif %}">Pending Tomorrow (11)</a>
-                <a href="{% url 'customers' %}?tab={{CustomerTabs.ALL_CLIENTS.value}}" role="tab" class="tab{% if tab.value == CustomerTabs.ALL_CLIENTS.value %} tab-active{% endif %}">All Clients (100)</a>
+                <a href="{% url 'customers' %}?tab={{CustomerTabs.PENDING_TODAY.value}}" role="tab" class="tab{% if tab.value == CustomerTabs.PENDING_TODAY.value %} tab-active{% endif %}">Pending Today ({{tabCounts.pending_today}})</a>
+                <a href="{% url 'customers' %}?tab={{CustomerTabs.PENDING_TOMORROW.value}}" role="tab" class="tab{% if tab.value == CustomerTabs.PENDING_TOMORROW.value %} tab-active{% endif %}">Pending Tomorrow ({{tabCounts.pending_tomorrow}})</a>
+                <a href="{% url 'customers' %}?tab={{CustomerTabs.ALL_CLIENTS.value}}" role="tab" class="tab{% if tab.value == CustomerTabs.ALL_CLIENTS.value %} tab-active{% endif %}">All Clients ({{tabCounts.all_clients}})</a>
             </div>
 
             <button class="btn btn-ghost" onclick="reminder_settings_modal.showModal()">
@@ -52,7 +52,7 @@
                     <tr class="bg-secondary text-secondary-content">
                         <th></th>
                         <th>Client name</th>
-                        <th>Pinged today?</th>
+                        <th class="w-[250px]">Pinged today?</th>
                         <th>Note</th>
                         <th>Reminder frequency</th>
                         <th></th>
@@ -63,10 +63,10 @@
                         <tr class="hover:bg-base-200/50">
                             <th>{{forloop.counter}}</th>
                             <td><a href="{{client.contact_link}}" target="_blank" class="link flex">{{client.name}} <i class="bi-box-arrow-up-right ml-1"></i>
-                            <td class="{% if today|date:'Y-m-d' == client.last_pinged_at|date:'Y-m-d' %}bg-success/5{% endif %}">
+                            <td class="w-[250px] {% if today|date:'Y-m-d' == client.last_pinged_at|date:'Y-m-d' %}bg-success/5{% endif %}">
                                 <button hx-post="{% url 'ping_client' client.id %}" class="btn btn-sm btn-accent">Ping now</button>
                                 {% if client.last_pinged_at %}
-                                    <p class="text-sm text-base-content/50">(last pinged at {{client.last_pinged_at|date:"dM"}})</p>
+                                    <p class="text-sm text-base-content/50">(last pinged at {{client.last_pinged_at|date:"dM H:i"}})</p>
                                 {% endif %}
                             </td>
                             <td class="max-w-36">{{client.note}}</td>
@@ -82,6 +82,10 @@
                                     <i class="bi-three-dots text-xl"></i>
                                 </button>
                             </td>
+                        </tr>
+                    {% empty %}
+                        <tr class="text-center">
+                            <td colspan="6">{% if tab == CustomerTabs.ALL_CLIENTS %}No clients found{% else %}No pending Client 😌{% endif %}</td>
                         </tr>
                     {% endfor %}
                 </tbody>
@@ -159,7 +163,7 @@
                 </fieldset>
                 <fieldset class="fieldset">
                     <legend class="fieldset-legend">Remind me after how many days?</legend>
-                    <input type="number" name="remind_me_in_days" class="input" value="{{create_client_form.remind_me_in_days.value|default:''}}">
+                    <input type="number" name="remind_me_in_days" class="input w-full" value="{{create_client_form.remind_me_in_days.value|default:''}}">
                     {% if create_client_form.errors.remind_me_in_days %}
                         <p class="fieldset-label text-error">{{create_client_form.errors.remind_me_in_days|join:","}}</p>
                     {% endif %}
@@ -209,7 +213,7 @@
                 </fieldset>
                 <fieldset class="fieldset">
                     <legend class="fieldset-legend">Remind me after how many days?</legend>
-                    <input type="number" name="remind_me_in_days" class="input" value="{{edit_client_form.remind_me_in_days.value|default:''}}">
+                    <input type="number" name="remind_me_in_days" class="input w-full" value="{{edit_client_form.remind_me_in_days.value|default:''}}">
                     {% if edit_client_form.errors.remind_me_in_days %}
                         <p class="fieldset-label text-error">{{edit_client_form.errors.remind_me_in_days|join:","}}</p>
                     {% endif %}

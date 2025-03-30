@@ -31,7 +31,19 @@ def customers(request):
         data={"hour": request.user.reminder_email_time.hour,
               "minute": request.user.reminder_email_time.minute})
     
-    clients = models.Client.objects.filter(created_by=request.user)
+    clients = models.Client.objects\
+        .filter(created_by=request.user)
+    
+    tabCounts = {
+        CustomerTabs.PENDING_TODAY.value: clients.pending_todays_clients().count(),
+        CustomerTabs.PENDING_TOMORROW.value: clients.pending_tomorrows_clients().count(),
+        CustomerTabs.ALL_CLIENTS.value: clients.count()
+    }
+    
+    if tab == CustomerTabs.PENDING_TODAY:
+        clients = clients.pending_todays_clients()
+    elif tab == CustomerTabs.PENDING_TOMORROW:
+        clients = clients.pending_tomorrows_clients()
     
     context = {
         'tab': tab,
@@ -39,7 +51,8 @@ def customers(request):
         'reminder_email_time_form': reminder_email_time_form,
         'create_client_form': forms.ClientForm(),
         'clients': clients,
-        'today': datetime.date.today()
+        'tabCounts': tabCounts,
+        'today': datetime.date.today(),
     }
 
     return render(request, 'dashboard/customers.html', context)
