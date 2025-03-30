@@ -15,7 +15,37 @@
 
     <!-- Main content -->
     <main class="py-5 container mx-auto px-2">
-        <h1 class="text-3xl">Profile</h1>
+        <form action="{% url 'profile_page' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <fieldset class="fieldset">
+                <legend class="fieldset-legend">Name</legend>
+                <input name="name" type="text" class="input w-full" placeholder="Enter your name..." value="{{profile_form.name.value|default:''}}" />
+                {% if profile_form.errors.name %}
+                    <p class="fieldset-label text-error">{{profile_form.errors.name|join:","}}</p>
+                {% endif %}
+            </fieldset>
+
+            <fieldset class="fieldset">
+                <legend class="fieldset-legend">Email</legend>
+                <input type="email" class="input w-full bg-base-300" value="{{request.user.email}}" readonly  />
+            </fieldset>
+
+            <fieldset class="fieldset">
+                <legend class="fieldset-legend">Profile Image</legend>
+                <div class="flex space-x-5 items-center">
+                    <input id="id_profile_image" name="profile_image" type="file" class="file-input" accept="image/*" />
+                    {% if request.user.profile_image %}
+                        <a href="{{request.user.profile_image.url}}" class="text-primary" target="_blank">{{request.user.profile_image.url}} <i class="bi-box-arrow-up-right"></i></a>
+                    {% endif %}
+                </div>
+
+                {% if profile_form.errors.profile_image %}
+                    <p class="fieldset-label text-error">{{profile_form.errors.profile_image|join:","}}</p>
+                {% endif %}
+            </fieldset>
+
+            <button type="submit" class="btn btn-success my-5">Submit</button>
+        </form>
 
     </main>
 

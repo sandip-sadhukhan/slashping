@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block title %}SlashPing - Dashboard{% endblock title %}
 {% block bodyOpeningTag %}<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' class="bg-base-200/80 min-h-screen">{% endblock bodyOpeningTag %}
 
@@ -6,7 +7,7 @@
     <!-- Toasts -->
     {% for message in messages %}
     <div class="toast">
-        <div class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-error{% endif %}">
+        <div class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-error text-primary-content{% endif %}">
             <span>{{message}}</span>
             <i data-toast="close" class="cursor-pointer bi-x-lg font-bold"></i>
         </div>
@@ -45,7 +46,7 @@
                         class="btn btn-link text-base-300 cursor-pointer flex items-center -space-x-1">
                         <div class="w-10 rounded-full">
                             <img alt="Profile Pic"
-                                src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                                src="{% if request.user.profile_image %}{{request.user.profile_image.url}}{% else %}{% static 'images/default_profile_pic.png' %}{% endif %}"
                                 class="btn-circle" />
                         </div>
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"

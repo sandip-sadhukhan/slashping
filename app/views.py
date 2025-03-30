@@ -164,4 +164,18 @@ def edit_client(request, client_id):
 
 @login_required
 def profile_page(request):
-    return render(request, 'dashboard/profile_page.html')
+    if request.method == 'POST':
+        form = forms.ProfileForm(data=request.POST, files=request.FILES, instance=request.user)
+
+        if form.is_valid():
+            form.save()
+            messages.add_message(request, messages.SUCCESS, "Profile updated successfully")
+
+            return redirect('profile_page')
+        else:
+            messages.add_message(request, messages.ERROR, "Profile update failed")
+    else:
+        form = forms.ProfileForm(instance=request.user)
+
+
+    return render(request, 'dashboard/profile_page.html', {'profile_form': form})
