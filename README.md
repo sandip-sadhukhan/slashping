@@ -39,7 +39,25 @@ Then edit the `.env` file if you want.
 python manage.py migrate
 ```
 
-7. Run the local server
+7. Run redis-server
+```bash
+redis-server
+```
+
+8. Run celery beat and celery worker
+```bash
+celery -A core worker -l info
+celery -A core beat -l info
+```
+
+9. Run mailhog
+```bash
+mailhog # if exe is setup
+# or for macos
+brew services start mailhog
+```
+
+10. Run the local server
 
 ```bash
 python manage.py runserver

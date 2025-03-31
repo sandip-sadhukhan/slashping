@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     # 3rd party apps
     'template_partials',
     'django_extensions',
+    'django_celery_beat',
 
     # My apps
     'app.apps.AppConfig',
@@ -128,3 +129,16 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 AUTH_USER_MODEL = 'accounts.User'
+
+# Celery Configuration
+CELERY_BROKER_URL = 'redis://localhost:6379/0'  # Redis as the message broker
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'  # Store task results
+CELERY_ACCEPT_CONTENT = ['json']  # Tasks can only receive JSON data
+CELERY_TASK_SERIALIZER = 'json'   # Serialize tasks as JSON
+CELERY_RESULT_SERIALIZER = 'json' # Serialize results as JSON
+CELERY_TIMEZONE = 'Asia/Calcutta'
+
+# Email config
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = '127.0.0.1'
+EMAIL_PORT = 1025

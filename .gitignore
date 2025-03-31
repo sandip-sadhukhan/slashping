@@ -9,3 +9,7 @@ node_modules/
 static/css/tailwind/output.css
 
 media/
+
+# Celery beat
+dump.rdb
+celerybeat-schedule.db
