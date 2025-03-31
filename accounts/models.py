@@ -48,6 +48,7 @@ class User(AbstractUser):
     new_client_target = models.PositiveIntegerField(default=0, validators = [MinValueValidator(0)])
     new_client_in_days = models.PositiveIntegerField(default=7, validators = [MinValueValidator(1), MaxValueValidator(30)])
     profile_image = models.ImageField(upload_to=user_directory_path, null=True, blank=True)
+    last_mail_sent_at = models.DateTimeField(null=True, blank=True)
 
     EMAIL_FIELD = "email"
     USERNAME_FIELD = "email"

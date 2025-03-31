@@ -16,7 +16,15 @@ def home(request):
 # Intermediate route for going to dashboard
 @login_required
 def dashboard(request):
-    return redirect(f"{reverse("customers")}?tab={CustomerTabs.PENDING_TODAY.value}")
+    params = request.GET.copy()
+    try:
+        tab = CustomerTabs(params.get('tab')).value
+    except ValueError:
+        tab = CustomerTabs.PENDING_TODAY.value
+
+    params['tab'] = tab
+
+    return redirect(f"{reverse('customers')}?{params.urlencode()}")
 
 @login_required
 def customers(request):
@@ -133,10 +141,21 @@ def create_client(request):
     return response
 
 @login_required
-@require_POST
+@require_http_methods(["POST", "GET"])
 def ping_client(request, client_id):
+    from_email = request.GET.get("origin") == "EMAIL"
+
+    # Get request only available for email users
+    if request.method == 'GET' and not from_email:
+        return redirect("dashboard")
+
     client = get_object_or_404(models.Client, id=client_id, created_by=request.user)
     client.ping()
+
+    messages.add_message(request, messages.SUCCESS, "Client pinged successfully")
+
+    if from_email:
+        return redirect('dashboard')
 
     response = HttpResponse()
     response['HX-Refresh'] = 'true'

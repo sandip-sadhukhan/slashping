@@ -70,15 +70,16 @@
                                 {% endif %}
                             </td>
                             <td class="max-w-36">{{client.note}}</td>
-                            <td>Every {{client.remind_me_in_days}} days</td>
+                            <td>Every {{client.remind_me_in_days}} day{% if client.remind_me_in_days > 1 %}s{% endif %}</td>
                             <td>
                                 <button
+                                    data-client-id="{{client.id}}"
                                     hx-get="{% url 'edit_client' client.id %}"
                                     hx-target="#edit_client_modal .modal-box"
                                     hx-swap="beforeend"
                                     hx-on::before-request="document.getElementById('edit_client_form')?.remove()"
                                     hx-on::after-request="edit_client_modal.showModal()"
-                                    class="btn btn-ghost btn-sm">
+                                    class="btn btn-ghost btn-sm edit-client-btn">
                                     <i class="bi-three-dots text-xl"></i>
                                 </button>
                             </td>
@@ -239,6 +240,14 @@
         if (params.get('open_new_client_modal')) {
             create_client_modal.showModal();
             params.delete('open_new_client_modal');
+            window.history.replaceState({}, document.title, window.location.pathname + '?' + params);
+        }
+
+        if (params.get("action") == "open_edit_client_modal" && params.get("action_id")) {
+            const clientId = params.get("action_id");
+            document.querySelector(`.edit-client-btn[data-client-id="${clientId}"]`).click();
+            params.delete("action");
+            params.delete("action_id");
             window.history.replaceState({}, document.title, window.location.pathname + '?' + params);
         }
     });

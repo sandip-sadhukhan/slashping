@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="font-family: Arial, Helvetica, sans-serif;background-color: oklch(93% 0 0);margin-left: 20px;margin-right: 20px;">
+    <h3>Pending pings for today!</h3>
+    <p>Hi, {{ user.name }}!</p>
+    <p>Here are the pings that are pending for today:</p>
+
+    <table style="width: 100%; border-collapse: collapse;background-color: white;">
+        <thead style="background-color: darkslateblue; color: white; height: 40px;">
+            <tr>
+                <th style="padding-left: 20px;"></th>
+                <th>Client name</th>
+                <th>Pinged today?</th>
+                <th>Note</th>
+                <th>Reminder frequency</th>
+                <th style="padding-right: 20px;"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for client in clients %}
+            <tr>
+                <td style="padding-left: 20px;">{{forloop.counter}}</td>
+                <td><a href="{{client.contact_link}}" style="font-size: 16px;color:black" target="_blank">{{client.name}}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5"/>
+                        <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z"/>
+                      </svg>
+                </a></td>
+                <td style="padding-top:10px">
+                    <a href="{{SITE_URL}}{% url 'ping_client' client.id %}?origin=EMAIL" style="cursor:pointer;text-decoration: none;font-size:14px;border:none;background-color: oklch(60% 0.118 184.704);color:white;padding:5px 10px;border-radius: 3px;">Ping now</a>
+                    <p style="margin-top: 10px; font-size: 13px;color:gray">(last pinged at {{client.last_pinged_at|date:"dM H:i"}})</p>
+                </td>
+                <td>{{client.note}}</td>
+                <td>Every {{client.remind_me_in_days}} day{% if client.remind_me_in_days > 1 %}s{% endif %}</td>
+                <td style="padding-right: 20px;">
+                    <a href="{{SITE_URL}}{% url 'dashboard' %}?action=open_edit_client_modal&action_id={{client.id}}&tab=all_clients" style="color: black;text-decoration: none;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
+                            <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3"/>
+                        </svg>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <hr>
+    <p style="margin-top: 30px;font-size: 12px;color: gray;">
+        Thanks for using Slashping! <br>
+        Made by <a href="https://sandipsadhukhan.com">Sandip Sadhukhan</a>
+    </p>
+</body>
+</html>

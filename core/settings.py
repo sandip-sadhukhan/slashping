@@ -60,6 +60,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'lib.context_processors.my_site_url',
             ],
         },
     },
@@ -142,3 +143,6 @@ CELERY_TIMEZONE = 'Asia/Calcutta'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = '127.0.0.1'
 EMAIL_PORT = 1025
+DEFAULT_FROM_EMAIL = "no-reply@slashping.com"
+
+SITE_URL = config("SITE_URL")
