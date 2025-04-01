@@ -40,8 +40,8 @@ def send_customers_mail():
 
         if clients.count() > 0:
             send_mail(
-                "Reminder Mail from SlashPing",
-                "This is a reminder mail from SlashPing",
+                "Customers Mail from SlashPing",
+                "This is a customers mail from SlashPing",
                 None,
                 [user.email],
                 html_message=html_message
@@ -54,4 +54,33 @@ def send_customers_mail():
 
 @shared_task
 def send_reminder_mail():
-    pass
+    users = User.objects\
+        .filter(
+            last_reminder_calculation_done_at__isnull=False,
+            last_reminder_calculation_done_at__lte=ExpressionWrapper(
+                timezone.now() - F('new_client_in_days') * timezone.timedelta(days=1),
+                output_field=DateTimeField()
+            )
+        )
+
+    for user in users:
+        user.pending_clients += user.new_client_target
+        user.last_reminder_calculation_done_at = timezone.now()
+        user.save()
+
+        context = {
+            'user': user,
+            'SITE_URL': settings.SITE_URL
+        }
+
+        html_message = render_to_string('emails/reminder_mail.html', context)
+
+        if user.new_client_target > 0:
+            send_mail(
+                "Reminder Mail from SlashPing",
+                "This is a reminder mail from SlashPing",
+                None,
+                [user.email],
+                html_message=html_message
+            )
+        

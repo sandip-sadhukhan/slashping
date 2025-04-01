@@ -218,15 +218,25 @@ def profile_page(request):
     return render(request, 'dashboard/profile_page.html', {'profile_form': form})
 
 @login_required
-@require_POST
+@require_http_methods(['GET', 'POST'])
 def reset_pending_counts(request):
+    from_email = request.GET.get("origin") == "EMAIL"
+
+    # Get request only available for email users
+    if request.method == 'GET' and not from_email:
+        return redirect("dashboard")
+
     user = request.user
     user.pending_clients = 0
     user.save()
 
     messages.add_message(request, messages.SUCCESS, "Counts reset successfully")
 
+    if from_email:
+        return redirect('reminder')
+
     response = HttpResponse()
+
     response['HX-Refresh'] = 'true'
 
     return response
