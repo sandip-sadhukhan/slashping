@@ -12,6 +12,6 @@ app.autodiscover_tasks()
 app.conf.beat_schedule = {
     'sending-reminder-mail-every-30-minutes': {
         'task': 'app.tasks.send_customers_mail',
-        'schedule': crontab(minute='*/1'),  # Every 30 minutes
+        'schedule': crontab(minute='*/30', hour='0-23'),  # Every 30 minutes starting from 00:00
     },
 }
