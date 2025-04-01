@@ -216,3 +216,17 @@ def profile_page(request):
 
 
     return render(request, 'dashboard/profile_page.html', {'profile_form': form})
+
+@login_required
+@require_POST
+def reset_pending_counts(request):
+    user = request.user
+    user.pending_clients = 0
+    user.save()
+
+    messages.add_message(request, messages.SUCCESS, "Counts reset successfully")
+
+    response = HttpResponse()
+    response['HX-Refresh'] = 'true'
+
+    return response

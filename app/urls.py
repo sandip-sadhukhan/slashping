@@ -12,4 +12,5 @@ urlpatterns = [
     path('delete_client/<int:client_id>/', views.delete_client, name='delete_client'),
     path('edit_client/<int:client_id>/', views.edit_client, name='edit_client'),
     path('profile_page/', views.profile_page, name='profile_page'),
+    path('reset_pending_counts/', views.reset_pending_counts, name='reset_pending_counts'),
 ]

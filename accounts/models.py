@@ -3,6 +3,7 @@ from django.db import models
 from django.contrib.auth.models import UserManager as BaseUserManager, AbstractUser
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.utils import timezone
 
 class UserManager(BaseUserManager):
     use_in_migrations = True
@@ -48,7 +49,9 @@ class User(AbstractUser):
     new_client_target = models.PositiveIntegerField(default=0, validators = [MinValueValidator(0)])
     new_client_in_days = models.PositiveIntegerField(default=7, validators = [MinValueValidator(1), MaxValueValidator(30)])
     profile_image = models.ImageField(upload_to=user_directory_path, null=True, blank=True)
-    last_mail_sent_at = models.DateTimeField(null=True, blank=True)
+    last_customers_mail_sent_at = models.DateTimeField(null=True, blank=True)
+    last_reminder_calculation_done_at = models.DateField(default=timezone.now)
+    pending_clients = models.PositiveIntegerField(default=0, validators = [MinValueValidator(0)])
 
     EMAIL_FIELD = "email"
     USERNAME_FIELD = "email"

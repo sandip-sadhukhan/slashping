@@ -37,8 +37,8 @@
             <button class="btn btn-success" type="submit">Save</button>
 
             <div class="text-xl my-5">
-                <b>12</b> pending clients. 
-                <button class="btn btn-sm">Reset counter</button>
+                <b>{{request.user.pending_clients}}</b> pending client{% if request.user.pending_clients > 1 %}s{% endif %}. 
+                <button hx-post="{% url 'reset_pending_counts' %}" class="btn btn-sm">Reset counter</button>
             </div>
         </form>
     </main>

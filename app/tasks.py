@@ -17,21 +17,18 @@ def send_customers_mail():
 
     users = User.objects.annotate(
         next_mail_should_sent_at=ExpressionWrapper(
-            TruncDate('last_mail_sent_at') +
+            TruncDate('last_customers_mail_sent_at') +
             timezone.timedelta(days=1) +
             (ExtractHour('reminder_email_time') * 60 + ExtractMinute('reminder_email_time')) * timezone.timedelta(minutes=1),
             output_field=DateTimeField()
         )
     ).filter(
-        Q(last_mail_sent_at__isnull=True) |
+        Q(last_customers_mail_sent_at__isnull=True) |
         Q(next_mail_should_sent_at__lte=now)
     )
 
     for user in users:
         clients = Client.objects.pending_todays_clients().filter(created_by=user)
-
-        if clients.count() == 0:
-            continue
 
         context = {
             'user': user,
@@ -41,12 +38,20 @@ def send_customers_mail():
 
         html_message = render_to_string('emails/customers_mail.html', context)
 
-        send_mail(
-            "Reminder Mail from SlashPing",
-            "This is a reminder mail from SlashPing",
-            None,
-            [user.email],
-            html_message=html_message
-        )
+        if clients.count() > 0:
+            send_mail(
+                "Reminder Mail from SlashPing",
+                "This is a reminder mail from SlashPing",
+                None,
+                [user.email],
+                html_message=html_message
+            )
+        
+        user.last_customer_mail_sent_at = now
+        user.save()
 
     return True
+
+@shared_task
+def send_reminder_mail():
+    pass
