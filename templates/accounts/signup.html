@@ -4,9 +4,14 @@
 {% block form %}
     <form class="flex flex-col space-y-5">
         <h1 class="text-3xl font-bold text-primary text-center"><a href="{% url 'home' %}" class="">SlashPing</a></h1>
-        <h2 class="text-3xl font-medium text-center">Welcome back!</h2>
+        <h2 class="text-3xl font-medium text-center">Create an account!</h2>
 
         <div class="flex flex-col space-y-1">
+            <fieldset class="fieldset">
+                <legend class="fieldset-legend">Name</legend>
+                <input name="name" type="text" class="input w-full" placeholder="Your name..." />
+                <!-- <p class="fieldset-label">You can edit page title later on from settings</p> -->
+            </fieldset>
             <fieldset class="fieldset">
                 <legend class="fieldset-legend">Email</legend>
                 <input name="email" type="email" class="input w-full" placeholder="Your email..." />
@@ -18,11 +23,11 @@
                 <!-- <p class="fieldset-label">You can edit page title later on from settings</p> -->
             </fieldset>
         </div>
-        <button type="submit" class="btn btn-primary">Login</button>
+        <button type="submit" class="btn btn-primary">Signup</button>
 
         <div class="divider">Or continue with</div>
 
         <a href="#" class="btn btn-primary btn-outline mt-2">Continue with Google</a>
-        <p class="text-center">Don't have an account? <a href="{% url 'signup' %}" class="link link-primary no-underline">Create an account</a></p>
+        <p class="text-center">Already have an account? <a href="{% url 'login' %}" class="link link-primary no-underline">Login</a></p>
     </form>
 {% endblock %}

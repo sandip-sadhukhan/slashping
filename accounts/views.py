@@ -10,6 +10,10 @@ from django.views.decorators.http import require_http_methods
 def login(request):
     return render(request, 'accounts/login.html')
 
+@require_http_methods(['GET', 'POST'])
+def signup(request):
+    return render(request, 'accounts/signup.html')
+
 def logout(request):
     auth_logout(request)
     return redirect('home')
