@@ -1,15 +1,44 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse
+from django.urls import reverse
 from django.contrib.auth import (
     logout as auth_logout,
     login as auth_login,
     authenticate,
 )
 from django.views.decorators.http import require_http_methods
+from lib.decorators import anonymous_required
+from accounts.forms import LoginForm
+from django.contrib import messages
 
+@anonymous_required
 @require_http_methods(['GET', 'POST'])
 def login(request):
-    return render(request, 'accounts/login.html')
+    form = LoginForm()
 
+    if request.method == "POST":
+        form = LoginForm(request.POST)
+
+        if form.is_valid():
+            email = form.cleaned_data.get('email')
+            password = form.cleaned_data.get('password')
+            user = authenticate(email=email, password=password)
+
+            if user is not None:
+                auth_login(request, user)
+
+                messages.add_message(request, messages.SUCCESS, 'You have successfully logged in')
+
+                response = HttpResponse()
+                response['HX-Redirect'] = reverse('dashboard')
+                return response
+            else:
+                form.errors['email'] = ["Invalid email or password"]
+
+        return render(request, 'accounts/login.html#login-form', {'login_form': form})
+
+    return render(request, 'accounts/login.html', {'login_form': form})
+
+@anonymous_required
 @require_http_methods(['GET', 'POST'])
 def signup(request):
     return render(request, 'accounts/signup.html')

@@ -20,8 +20,8 @@
         </div>
         <div class="flex-none">
             <ul class="menu menu-horizontal px-1">
-                <li><a>Login</a></li>
-                <li><a>Signup</a></li>
+                <li><a href="{% url 'login' %}">Login</a></li>
+                <li><a href="{% url 'signup' %}">Signup</a></li>
             </ul>
         </div>
     </div>
@@ -35,7 +35,7 @@
         <p class="mt-2 text-center md:text-left">Whether you're an aspiring professional looking to connect with key individuals, or
             someone simply trying to maintain meaningful relationships, SlashPing makes it effortless to stay in touch.</p>
         <div class="flex mt-5 justify-center md:justify-start">
-            <a class="btn btn-primary">Get Started</a>
+            <a href="{% url 'signup' %}" class="btn btn-primary">Get Started</a>
             <button onclick="watch_video_modal.showModal()" class="btn btn-ghost ml-2 flex items-center"><i class="bi-youtube text-2xl text-error"></i> <span>Watch video</span></button>
         </div>
     </div>
@@ -70,7 +70,7 @@
         </div>
 
         <div class="flex justify-center mt-8">
-            <a class="btn btn-primary">Get Started</a>
+            <a href="{% url 'signup' %}" class="btn btn-primary">Get Started</a>
         </div>
     </div>
 </section>

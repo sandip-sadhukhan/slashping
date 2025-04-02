@@ -1,21 +1,32 @@
 {% extends 'accounts/base.html' %}
+{% load partials %}
 {% block title %}Login | SlashPing{% endblock title %}
 
 {% block form %}
-    <form class="flex flex-col space-y-5">
+    {% partialdef login-form inline %}
+    <form
+        id="login-form"
+        class="flex flex-col space-y-5"
+        hx-post="{% url 'login' %}"
+        hx-swap="outerHTML"
+        hx-target="#login-form">
         <h1 class="text-3xl font-bold text-primary text-center"><a href="{% url 'home' %}" class="">SlashPing</a></h1>
         <h2 class="text-3xl font-medium text-center">Welcome back!</h2>
 
         <div class="flex flex-col space-y-1">
             <fieldset class="fieldset">
                 <legend class="fieldset-legend">Email</legend>
-                <input name="email" type="email" class="input w-full" placeholder="Your email..." />
-                <!-- <p class="fieldset-label">You can edit page title later on from settings</p> -->
+                <input name="email" type="email" class="input w-full" placeholder="Your email..." value="{{login_form.email.value|default:''}}" />
+                {% if login_form.errors.email %}
+                    <p class="fieldset-label text-error">{{login_form.errors.email|join:','}}</p>
+                {% endif %}
             </fieldset>
             <fieldset class="fieldset">
                 <legend class="fieldset-legend">Password</legend>
-                <input name="password" type="password" class="input w-full" placeholder="******" />
-                <!-- <p class="fieldset-label">You can edit page title later on from settings</p> -->
+                <input name="password" type="password" class="input w-full" placeholder="******" value="{{login_form.email.value|default:''}}" />
+                {% if login_form.errors.password %}
+                    <p class="fieldset-label text-error">{{login_form.errors.password|join:','}}</p>
+                {% endif %}
             </fieldset>
         </div>
         <button type="submit" class="btn btn-primary">Login</button>
@@ -25,4 +36,5 @@
         <a href="#" class="btn btn-primary btn-outline mt-2">Continue with Google</a>
         <p class="text-center">Don't have an account? <a href="{% url 'signup' %}" class="link link-primary no-underline">Create an account</a></p>
     </form>
+    {% endpartialdef %}
 {% endblock %}
