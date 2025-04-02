@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}SlashPing - Dashboard{% endblock title %}
+{% block bodyOpeningTag %}<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' class="bg-base-200/80 min-h-screen">{% endblock bodyOpeningTag %}
+
+{% block content %}
+<main class="flex min-h-screen">
+    <!-- Left Side -->
+    <div class="hidden flex-col space-y-5 flex-1 md:flex my-auto">
+        <div class="flex flex-col space-y-3 container max-w-2xl mx-auto px-5 py-10">
+            <h2 class="text-2xl mt-10 font-medium">Build connections & stay on track</h2>
+            <p>Whether you're an aspiring professional looking to connect with key individuals, or someone simply trying to maintain meaningful relationships, SlashPing makes it effortless to stay in touch.</p>
+            <div class="bg-white p-5 rounded-lg shadow mt-10 -me-[200px]">
+                <img src="{% static 'images/dashboard-screenshot.png' %}" alt="Dashboard Screenshot">
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Right Side -->
+    <div class="flex flex-col space-y-3 flex-1 relative bg-white">
+        <!-- bg pattern  -->
+        <div class="absolute top-0 left-0 w-full h-full bg-white opacity-20 z-10" style="background-image: radial-gradient(#0082ce 1.5px, #fff 1.5px);
+        background-size: 30px 30px;"></div>
+
+        <!-- Main layer -->
+        <div class="container max-w-xl mx-auto p-5 my-auto z-20">
+            <form class="flex flex-col space-y-5">
+                <h1 class="text-3xl font-bold text-primary text-center"><a href="{% url 'home' %}" class="">SlashPing</a></h1>
+                <h2 class="text-3xl font-medium text-center">Welcome back!</h2>
+
+                <div class="flex flex-col space-y-1">
+                    <fieldset class="fieldset">
+                        <legend class="fieldset-legend">Email</legend>
+                        <input name="email" type="email" class="input w-full" placeholder="Your email..." />
+                        <!-- <p class="fieldset-label">You can edit page title later on from settings</p> -->
+                    </fieldset>
+                    <fieldset class="fieldset">
+                        <legend class="fieldset-legend">Password</legend>
+                        <input name="password" type="password" class="input w-full" placeholder="******" />
+                        <!-- <p class="fieldset-label">You can edit page title later on from settings</p> -->
+                    </fieldset>
+                </div>
+                <button type="submit" class="btn btn-primary">Login</button>
+
+                <div class="divider">Or continue with</div>
+
+                <a href="#" class="btn btn-primary btn-outline mt-2">Continue with Google</a>
+                <p class="text-center">Don't have an account? <a href="#" class="link link-primary no-underline">Create an account</a></p>
+            </form>
+        </div>
+    </div>
+</main>
+{% endblock %}

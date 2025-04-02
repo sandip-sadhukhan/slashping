@@ -146,3 +146,7 @@ EMAIL_PORT = 1025
 DEFAULT_FROM_EMAIL = "no-reply@slashping.com"
 
 SITE_URL = config("SITE_URL")
+
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/dashboard/'
+LOGOUT_REDIRECT_URL = '/login/'
