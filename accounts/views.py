@@ -7,7 +7,7 @@ from django.contrib.auth import (
 )
 from django.views.decorators.http import require_http_methods
 from lib.decorators import anonymous_required
-from accounts.forms import LoginForm
+from accounts.forms import LoginForm, SignupForm
 from django.contrib import messages
 
 @anonymous_required
@@ -41,6 +41,28 @@ def login(request):
 @anonymous_required
 @require_http_methods(['GET', 'POST'])
 def signup(request):
+    form = SignupForm()
+
+    if request.method == "POST":
+        form = SignupForm(request.POST)
+
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.set_password(form.cleaned_data.get('password'))
+            user.save()
+
+            messages.add_message(request, messages.SUCCESS, 'You have successfully signed up')
+
+            user = authenticate(email=user.email, password=form.cleaned_data.get('password'))
+            auth_login(request, user)
+
+            response = HttpResponse()
+            response['HX-Redirect'] = reverse('dashboard')
+            return response
+
+        return render(request, 'accounts/signup.html#signup-form', {'signup_form': form})
+
+    
     return render(request, 'accounts/signup.html')
 
 def logout(request):

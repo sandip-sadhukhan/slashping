@@ -1,33 +1,47 @@
 {% extends 'accounts/base.html' %}
+{% load partials %}
 {% block title %}Login | SlashPing{% endblock title %}
 
 {% block form %}
-    <form class="flex flex-col space-y-5">
-        <h1 class="text-3xl font-bold text-primary text-center"><a href="{% url 'home' %}" class="">SlashPing</a></h1>
-        <h2 class="text-3xl font-medium text-center">Create an account!</h2>
+    {% partialdef signup-form inline %}
+        <form
+            id="signup-form"
+            class="flex flex-col space-y-5"
+            hx-post="{% url 'signup' %}"
+            hx-target="#signup-form"
+            hx-swap="outerHTML">
+            <h1 class="text-3xl font-bold text-primary text-center"><a href="{% url 'home' %}" class="">SlashPing</a></h1>
+            <h2 class="text-3xl font-medium text-center">Create an account!</h2>
 
-        <div class="flex flex-col space-y-1">
-            <fieldset class="fieldset">
-                <legend class="fieldset-legend">Name</legend>
-                <input name="name" type="text" class="input w-full" placeholder="Your name..." />
-                <!-- <p class="fieldset-label">You can edit page title later on from settings</p> -->
-            </fieldset>
-            <fieldset class="fieldset">
-                <legend class="fieldset-legend">Email</legend>
-                <input name="email" type="email" class="input w-full" placeholder="Your email..." />
-                <!-- <p class="fieldset-label">You can edit page title later on from settings</p> -->
-            </fieldset>
-            <fieldset class="fieldset">
-                <legend class="fieldset-legend">Password</legend>
-                <input name="password" type="password" class="input w-full" placeholder="******" />
-                <!-- <p class="fieldset-label">You can edit page title later on from settings</p> -->
-            </fieldset>
-        </div>
-        <button type="submit" class="btn btn-primary">Signup</button>
+            <div class="flex flex-col space-y-1">
+                <fieldset class="fieldset">
+                    <legend class="fieldset-legend">Name</legend>
+                    <input name="name" type="text" class="input w-full" placeholder="Your name..." value="{{signup_form.name.value|default:''}}" />
+                    {% if signup_form.errors.name %}
+                        <p class="fieldset-label text-error">{{signup_form.errors.name|join:','}}</p>
+                    {% endif %}
+                </fieldset>
+                <fieldset class="fieldset">
+                    <legend class="fieldset-legend">Email</legend>
+                    <input name="email" type="email" class="input w-full" placeholder="Your email..." value="{{signup_form.email.value|default:''}}" />
+                    {% if signup_form.errors.email %}
+                        <p class="fieldset-label text-error">{{signup_form.errors.email|join:','}}</p>
+                    {% endif %}
+                </fieldset>
+                <fieldset class="fieldset">
+                    <legend class="fieldset-legend">Password</legend>
+                    <input name="password" type="password" class="input w-full" placeholder="******" value="{{signup_form.password.value|default:''}}" />
+                    {% if signup_form.errors.password %}
+                        <p class="fieldset-label text-error">{{signup_form.errors.password|join:','}}</p>
+                    {% endif %}
+                </fieldset>
+            </div>
+            <button type="submit" class="btn btn-primary">Signup</button>
 
-        <div class="divider">Or continue with</div>
+            <div class="divider">Or continue with</div>
 
-        <a href="#" class="btn btn-primary btn-outline mt-2">Continue with Google</a>
-        <p class="text-center">Already have an account? <a href="{% url 'login' %}" class="link link-primary no-underline">Login</a></p>
-    </form>
+            <a href="#" class="btn btn-primary btn-outline mt-2">Continue with Google</a>
+            <p class="text-center">Already have an account? <a href="{% url 'login' %}" class="link link-primary no-underline">Login</a></p>
+        </form>
+    {% endpartialdef %}
 {% endblock %}
