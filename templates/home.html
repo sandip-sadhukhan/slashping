@@ -1,18 +1,94 @@
 {% extends 'base.html' %}
+{% load static %}
+
 {% block title %}SlashPing - Build connections & stay on track{% endblock title %}
 
 {% block head %}
-<meta name="description" content="Whether you're an aspiring professional looking to connect with key individuals, or someone simply trying to maintain meaningful relationships, SlashPing makes it effortless to stay in touch.">
+<meta name="description"
+    content="Whether you're an aspiring professional looking to connect with key individuals, or someone simply trying to maintain meaningful relationships, SlashPing makes it effortless to stay in touch.">
 {% endblock head %}
 
+{% block bodyOpeningTag %}<body class="bg-base-200/80 min-h-screen">{% endblock bodyOpeningTag %}
+
 {% block content %}
-<div class="d-flex gap-10 p-5 flex-column justify-start align-items-start">
-    <h1>Home page</h1>
-    {% if request.user.is_authenticated %}
-        <a href="{% url 'dashboard' %}" class="btn btn-primary">Dashboard</a>
-    {% else %}
-        <a href="{% url 'admin:login' %}" class="btn btn-success">Login</a>
-    {% endif %}
+
+<!-- Navbar -->
+<div class="bg-primary text-primary-content shadow-sm">
+    <div class="navbar mx-auto container flex justify-between">
+        <div class="flex-1">
+            <a class="btn btn-ghost text-xl">SlashPing</a>
+        </div>
+        <div class="flex-none">
+            <ul class="menu menu-horizontal px-1">
+                <li><a>Login</a></li>
+                <li><a>Signup</a></li>
+            </ul>
+        </div>
+    </div>
 </div>
+
+<!-- Hero content -->
+<section id="hero" class="container mx-auto px-2 my-10 md:my-20 flex flex-col md:flex-row md:space-x-20 space-y-10 items-center">
+    <!-- Left content -->
+    <div class="flex flex-col flex-1 space-y-2">
+        <h1 class="text-4xl font-bold text-center md:text-left">Build <span class="text-primary font-black">connections</span> & stay on track</h1>
+        <p class="mt-2 text-center md:text-left">Whether you're an aspiring professional looking to connect with key individuals, or
+            someone simply trying to maintain meaningful relationships, SlashPing makes it effortless to stay in touch.</p>
+        <div class="flex mt-5 justify-center md:justify-start">
+            <a class="btn btn-primary">Get Started</a>
+            <button onclick="watch_video_modal.showModal()" class="btn btn-ghost ml-2 flex items-center"><i class="bi-youtube text-2xl text-error"></i> <span>Watch video</span></button>
+        </div>
+    </div>
+
+    <!-- Right content -->
+    <div class="flex-1 shadow rounded-lg p-5 bg-base-100">
+        <img src="{% static 'images/dashboard-screenshot.png' %}" alt="Hero Image" class="w-full" />
+    </div>
+</section>
+
+
+<section id="how-it-works" class="bg-white py-10">
+    <div class="container mx-auto px-2">
+        <h2 class="text-3xl text-center font-medium">How it works?</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mt-10">
+            <div class="flex flex-col items-center">
+                <i class="bi-person-circle text-7xl text-secondary"></i>
+                <h3 class="text-xl font-medium mt-5">Create an account</h3>
+                <p class="text-center mt-2">Sign up for a free account and start connecting with people.</p>
+            </div>
+            <div class="flex flex-col items-center">
+                <i class="bi-person-fill-add text-7xl text-secondary"></i>
+                <h3 class="text-xl font-medium mt-5">Add contacts</h3>
+                <p class="text-center mt-2">Add contacts to your account and start building relationships.</p>
+            </div>
+            <div class="flex flex-col items-center">
+                <i class="bi-chat-text-fill text-7xl text-secondary"></i>
+                <h3 class="text-xl font-medium mt-5">Stay connected</h3>
+                <p class="text-center mt-2">Stay in touch with your contacts and never miss an important event.</p>
+            </div>
+        </div>
+
+        <div class="flex justify-center mt-8">
+            <a class="btn btn-primary">Get Started</a>
+        </div>
+    </div>
+</section>
+
+<footer class="bg-secondary text-secondary-content py-5">
+    <div class="container mx-auto text-center px-2">
+        <p>Developed by <a href="https://sandipsadhukhan.com" class="link">Sandip Sadhukhan</a> | Slashping &copy; 2025 All rights reserved</p>
+    </div>
+</footer>
+
+<!-- Watch video modal -->
+<dialog id="watch_video_modal" class="modal">
+    <div class="modal-box min-w-[617px] min-h-[362px]">
+        <form method="dialog">
+            <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+        </form>
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/9R5xprl9a0k?si=pUWdMld9q7LpDGSP" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </div>
+</dialog>
 
 {% endblock content %}
