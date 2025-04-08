@@ -84,3 +84,26 @@ def send_reminder_mail():
                 html_message=html_message
             )
         
+    return True
+
+@shared_task
+def send_google_signup_mail(user_id, password):
+    user = User.objects.get(id=user_id)
+
+    context = {
+        'user': user,
+        'password': password,
+        'SITE_URL': settings.SITE_URL
+    }
+
+    html_message = render_to_string('emails/google_signup_mail.html', context)
+
+    send_mail(
+        "Google Signup Mail from SlashPing",
+        "This is a Google signup mail from SlashPing",
+        None,
+        [user.email],
+        html_message=html_message
+    )
+
+    return True

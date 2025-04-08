@@ -14,6 +14,7 @@ from lib.google_auth import GoogleRawLoginFlowService
 from urllib.request import urlopen
 from tempfile import NamedTemporaryFile
 from django.core.files import File
+from app.tasks import send_google_signup_mail
 
 
 @anonymous_required
@@ -151,7 +152,9 @@ def google_callback(request):
 
         auth_login(request, user)
         messages.add_message(request, messages.SUCCESS, 'You have successfully signed up with Google')
-        # Send mail to user with password
+
+        # Send mail to user with password, call the celery task
+        send_google_signup_mail.delay(user.id, password)
 
     # Login user if exists
     else:

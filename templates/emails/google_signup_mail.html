@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="font-family: Arial, Helvetica, sans-serif;background-color: oklch(93% 0 0);margin-left: 20px;margin-right: 20px;">
+    <p>Hi, {{ user.name }}!</p>
+    <p>You've successfully signedup to SlashPing with Google account, please find the below credentials for login to your account:</p>
+
+    <table style="width: 100%; border-collapse: collapse;background-color: white;">
+        <thead style="background-color: darkslateblue; color: white; height: 40px;">
+            <tr>
+                <th style="padding-left: 20px;"></th>
+                <th>Field</th>
+                <th>Value</th>
+                <th style="padding-right: 20px;"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="padding-left: 20px;">1</td>
+                <td>Email</td>
+                <td>{{ user.email }}</td>
+                <td style="padding-right: 20px;"></td>
+            </tr>
+            <tr>
+                <td style="padding-left: 20px;">2</td>
+                <td>Password</td>
+                <td>{{ password }}</td>
+                <td style="padding-right: 20px;"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <hr>
+    <p style="margin-top: 30px;font-size: 12px;color: gray;">
+        Thanks for using Slashping! <br>
+        Made by <a href="https://sandipsadhukhan.com">Sandip Sadhukhan</a>
+    </p>
+</body>
+</html>
