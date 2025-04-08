@@ -4,6 +4,8 @@ from django.contrib.auth.models import UserManager as BaseUserManager, AbstractU
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.utils import timezone
+import string
+import secrets
 
 class UserManager(BaseUserManager):
     use_in_migrations = True
@@ -33,6 +35,11 @@ class UserManager(BaseUserManager):
             raise ValueError("Superuser must have is_superuser=True.")
 
         return self._create_user(email, password, **extra_fields)
+
+    def make_random_password(self, length=8):
+        alphabet = string.ascii_letters + string.digits
+        password = ''.join(secrets.choice(alphabet) for i in range(length))
+        return password
     
 
 def user_directory_path(instance, filename): 

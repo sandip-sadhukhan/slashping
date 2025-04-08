@@ -4,16 +4,6 @@
 {% block bodyOpeningTag %}<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' class="bg-base-200/80 min-h-screen">{% endblock bodyOpeningTag %}
 
 {% block content %}
-    <!-- Toasts -->
-    {% for message in messages %}
-    <div class="toast">
-        <div class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-error text-primary-content{% endif %}">
-            <span>{{message}}</span>
-            <i data-toast="close" class="cursor-pointer bi-x-lg font-bold"></i>
-        </div>
-    </div>
-    {% endfor %}
-
     <!-- Navbar -->
     <div class="bg-primary text-primary-content shadow-sm">
         <div class="navbar mx-auto container">

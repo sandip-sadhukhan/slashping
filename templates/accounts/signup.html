@@ -40,7 +40,7 @@
 
             <div class="divider">Or continue with</div>
 
-            <a href="#" class="btn btn-primary btn-outline mt-2">Continue with Google</a>
+            <a href="{% url 'google_login' %}" class="btn btn-primary btn-outline mt-2">Continue with Google</a>
             <p class="text-center">Already have an account? <a href="{% url 'login' %}" class="link link-primary no-underline">Login</a></p>
         </form>
     {% endpartialdef %}

@@ -16,6 +16,16 @@
 </head>
 
 {% block bodyOpeningTag %}<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>{% endblock bodyOpeningTag %}
+    <!-- Toasts -->
+    {% for message in messages %}
+    <div class="toast">
+        <div class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-error text-primary-content{% endif %}">
+            <span>{{message}}</span>
+            <i data-toast="close" class="cursor-pointer bi-x-lg font-bold"></i>
+        </div>
+    </div>
+    {% endfor %}
+
     {% block content %}{% endblock content %}
 
     <!-- Scripts -->
