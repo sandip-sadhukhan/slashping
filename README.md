@@ -29,7 +29,7 @@ npm run watch:css
 5. Create the `.env` file
 
 ```bash
-cp .deafult.env .env
+cp .env.example .env
 ```
 
 Then edit the `.env` file if you want.
