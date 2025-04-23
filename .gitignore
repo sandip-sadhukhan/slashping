@@ -4,6 +4,7 @@ venv/
 .env
 db.sqlite3
 node_modules/
+data/
 
 # Don't add tailwind output in git as it is generated though input.css
 static/css/tailwind/output.css
@@ -13,3 +14,4 @@ media/
 # Celery beat
 dump.rdb
 celerybeat-schedule.db
+celerybeat-schedule
