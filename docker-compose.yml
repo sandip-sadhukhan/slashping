@@ -54,5 +54,6 @@ services:
     volumes:
       - .:/app
       - /app/node_modules
+    stdin_open: true
     depends_on:
       - web
