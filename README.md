@@ -1,64 +1,28 @@
 # How to run locally
 We are using `Python 3.12.2` for this project.
 
-1. Create a virtual env.
+1. Generate environment variables
 
 ```bash
-python3 -m venv venv
+cp env/db.example.env env/db.env && cp env/web.example.env env/web.env
 ```
 
-2. Activate the venv
+Then you can open `env/db.env` and `env/web.env` file and edit creds as per your need.
+
+2. Run local server
 
 ```bash
-source venv/bin/activate
+docker compose up --build
 ```
 
-3. Install requirements
+NOTE: For first time it might throw error as database is not connected and django is trying to connect db. If that happens, just hit Ctrl + C and rerun the above command it will fix.
+
+3. Run db migrations
 
 ```bash
-pip install -r requirements.txt
+docker compose exec web python manage.py migrate
 ```
 
-4. Build the tailwind css
+Now you can go to `http://localhost:8000` to open the web app.
 
-```bash
-npm install
-npm run watch:css
-```
-
-5. Create the `.env` file
-
-```bash
-cp .env.example .env
-```
-
-Then edit the `.env` file if you want.
-
-6. Run all migrations
-```bash
-python manage.py migrate
-```
-
-7. Run redis-server
-```bash
-redis-server
-```
-
-8. Run celery beat and celery worker
-```bash
-celery -A core worker -l info
-celery -A core beat -l info
-```
-
-9. Run mailhog
-```bash
-mailhog # if exe is setup
-# or for macos
-brew services start mailhog
-```
-
-10. Run the local server
-
-```bash
-python manage.py runserver
-```
+You can use `docker compose down` command to take down server or `Ctrl + C` command.
