@@ -1,0 +1,55 @@
+name: slashping-prod
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: ./dockerfiles/web.prod.dockerfile
+    env_file:
+      - ./env/web.prod.env
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - redis
+
+  db:
+    image: postgres:16
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    env_file:
+      - ./env/db.prod.env
+
+  redis:
+    image: redis:7.2
+    volumes:
+      - ./data/redis:/data
+  
+  # celery:
+  #   build:
+  #     context: .
+  #     dockerfile: ./dockerfiles/web.dockerfile
+  #   command: celery -A core worker --loglevel=info -B
+  #   volumes:
+  #     - ./:/app
+  #     - /app/node_modules
+  #   env_file:
+  #     - ./env/web.env
+  #   depends_on:
+  #     - db
+  #     - redis
+  
+  
+  # node:
+  #   build:
+  #     context: .
+  #     dockerfile: ./dockerfiles/node.dockerfile
+  #   volumes:
+  #     - .:/app
+  #     - /app/node_modules
+  #   stdin_open: true
+  #   depends_on:
+  #     - web
+
+# TODOS
+# aws mail setup

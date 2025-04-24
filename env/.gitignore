@@ -1,2 +1,4 @@
 db.env
 web.env
+db.prod.env
+web.prod.env
