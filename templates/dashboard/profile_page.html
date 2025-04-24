@@ -35,7 +35,7 @@
                 <div class="flex space-x-5 items-center">
                     <input id="id_profile_image" name="profile_image" type="file" class="file-input" accept="image/*" />
                     {% if request.user.profile_image %}
-                        <a href="{{request.user.profile_image.url}}" class="text-primary" target="_blank">{{request.user.profile_image.url}} <i class="bi-box-arrow-up-right"></i></a>
+                        <a href="{{request.user.profile_image.url}}" class="text-primary" target="_blank">Open profile image <i class="bi-box-arrow-up-right"></i></a>
                     {% endif %}
                 </div>
 
