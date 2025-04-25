@@ -25,28 +25,24 @@ services:
     volumes:
       - ./data/redis:/data
   
-  # celery:
-  #   build:
-  #     context: .
-  #     dockerfile: ./dockerfiles/web.dockerfile
-  #   command: celery -A core worker --loglevel=info -B
-  #   volumes:
-  #     - ./:/app
-  #     - /app/node_modules
-  #   env_file:
-  #     - ./env/web.env
-  #   depends_on:
-  #     - db
-  #     - redis
+  celery:
+    build:
+      context: .
+      dockerfile: ./dockerfiles/web.prod.dockerfile
+    command: celery -A core worker --loglevel=info -B
+    env_file:
+      - ./env/web.prod.env
+    depends_on:
+      - db
+      - redis
   
   
-  # node:
-  #   build:
-  #     context: .
-  #     dockerfile: ./dockerfiles/node.dockerfile
-  #   volumes:
-  #     - .:/app
-  #     - /app/node_modules
-  #   stdin_open: true
-  #   depends_on:
-  #     - web
+  node:
+    build:
+      context: .
+      dockerfile: ./dockerfiles/node.prod.dockerfile
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      - web
