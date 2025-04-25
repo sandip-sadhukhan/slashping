@@ -143,9 +143,6 @@ CELERY_RESULT_SERIALIZER = 'json' # Serialize results as JSON
 CELERY_TIMEZONE = 'Asia/Calcutta'
 
 # Email config
-EMAIL_BACKEND = os.getenv("EMAIL_BACKEND")
-EMAIL_HOST = os.getenv("EMAIL_HOST")
-EMAIL_PORT = os.getenv("EMAIL_PORT")
 DEFAULT_FROM_EMAIL = "no-reply@slashping.com"
 
 SITE_URL = os.getenv("SITE_URL")

@@ -15,3 +15,5 @@ media/
 dump.rdb
 celerybeat-schedule.db
 celerybeat-schedule
+
+todos.txt

@@ -50,6 +50,3 @@ services:
   #   stdin_open: true
   #   depends_on:
   #     - web
-
-# TODOS
-# aws mail setup
